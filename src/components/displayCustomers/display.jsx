@@ -120,6 +120,39 @@ export default function DisplayBookings({
       />
 
       {/* Grand Totals Summary */}
+      {/* Distribution Summary */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+          backgroundColor: "#fff3e0",
+          padding: "16px",
+          borderRadius: "6px",
+          boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+          marginBottom: "30px",
+          fontWeight: "bold",
+          fontSize: "16px",
+        }}
+      >
+        {[
+          { name: "BISHAL", percent: 40 },
+          { name: "SMIT", percent: 40 },
+          { name: "DIWAS", percent: 10 },
+          { name: "SERVER", percent: 10 },
+        ].map(({ name, percent }) => {
+          const shareBase =
+            (grandTotals.entryFee || 0) - (grandTotals.winning || 0);
+
+          const share = shareBase * (percent / 100);
+
+          return (
+            <div key={name}>
+              {name}: Rs {Math.round(share)} ({percent}%)
+            </div>
+          );
+        })}
+      </div>
+
       <div
         style={{
           marginBottom: "30px",
@@ -500,10 +533,12 @@ export default function DisplayBookings({
                         colSpan={10}
                         style={{ padding: "8px", textAlign: "left" }}
                       >
-                        Total Team Amount (Entry Fee - Winning):
+                        {totalTeamAmount >= 0
+                          ? "Total Team Entry (Entry Fee - Winning):"
+                          : "Total Winning (Winning - Entry Fee):"}
                       </td>
                       <td className="relative left-[-1300px] text-white bg-red-600 w-[160px] text-center">
-                        Rs {Math.round(totalTeamAmount)}
+                        Rs {Math.round(Math.abs(totalTeamAmount))}
                       </td>
                     </tr>
                   </tfoot>
