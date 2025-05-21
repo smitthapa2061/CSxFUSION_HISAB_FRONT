@@ -24,11 +24,17 @@ export default function DisplayBookings({
 
   if (!teams) return <p>Loading teams...</p>;
 
-  const filteredTeams = teams.filter(
-    (team) =>
-      team.teamName &&
-      team.teamName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredTeams = teams
+    .filter(
+      (team) =>
+        team.teamName &&
+        team.teamName.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      const totalA = a.bookings.reduce((sum, b) => sum + (b.entryFee || 0), 0);
+      const totalB = b.bookings.reduce((sum, b) => sum + (b.entryFee || 0), 0);
+      return totalB - totalA; // Descending order (highest first)
+    });
 
   const handleEditBookingClick = (teamName, booking, index) => {
     setEditingBooking({ teamName, index });
@@ -214,10 +220,11 @@ export default function DisplayBookings({
             <div key={team._id} style={{ marginBottom: "60px" }}>
               <h3
                 style={{ marginBottom: "12px" }}
-                className="text-[40px] font-bold text-red-600 text-center"
+                className="text-[40px] font-bold text-red-600 text-left ml-[30px] "
               >
                 TEAM - {team.teamName}
                 <button
+                  className=""
                   style={{
                     marginLeft: "20px",
                     padding: "6px 12px",
@@ -537,7 +544,7 @@ export default function DisplayBookings({
                           ? "Total Team Entry (Entry Fee - Winning):"
                           : "Total Winning (Winning - Entry Fee):"}
                       </td>
-                      <td className="relative left-[-1300px] text-white bg-red-600 w-[160px] text-center">
+                      <td className="absolute left-[300px] text-white bg-red-600 w-[160px] text-center text-[1.9rem]">
                         Rs {Math.round(Math.abs(totalTeamAmount))}
                       </td>
                     </tr>
