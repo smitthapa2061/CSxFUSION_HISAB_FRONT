@@ -158,6 +158,7 @@ export default function TeamSelector() {
         production: "",
         productionCost: 0,
       });
+      setSelectedTeams([]); // ✅ Clear selected checkboxes
       await fetchTeams();
     } catch (error) {
       setMessage("Error adding booking: " + error.message);
