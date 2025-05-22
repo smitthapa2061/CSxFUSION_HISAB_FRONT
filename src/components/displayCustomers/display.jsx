@@ -106,7 +106,7 @@ export default function DisplayBookings({
   };
 
   return (
-    <div className=" mt-[300px]">
+    <div className="mt-[100px]">
       <h2>Team Bookings Overview</h2>
 
       <input

@@ -8,7 +8,7 @@ export default function TeamSelector() {
   const [message, setMessage] = useState("");
   const [newTeamName, setNewTeamName] = useState("");
   const [showAll, setShowAll] = useState(false); // NEW: toggle all
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [booking, setBooking] = useState({
     customerName: "",
     date: "",
@@ -135,6 +135,8 @@ export default function TeamSelector() {
       setMessage("Please select at least one team to add booking.");
       return;
     }
+
+    setIsSubmitting(true); // disable button
     try {
       await Promise.all(
         selectedTeams.map((teamName) =>
@@ -158,10 +160,17 @@ export default function TeamSelector() {
         production: "",
         productionCost: 0,
       });
-      setSelectedTeams([]); // ✅ Clear selected checkboxes
+      setSelectedTeams([]); // Clear selected checkboxes
       await fetchTeams();
     } catch (error) {
-      setMessage("Error adding booking: " + error.message);
+      const errMsg =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Unknown error";
+      setMessage(`Error adding booking: ${errMsg}`);
+    } finally {
+      setIsSubmitting(false); // re-enable button
     }
   };
 
@@ -200,31 +209,31 @@ export default function TeamSelector() {
             </div>
 
             <h2 className="relative left-[100px]">Select Teams</h2>
-
-            {teams.length === 0 && !message && (
-              <p className="">Loading teams...</p>
+            {message && (
+              <p className="relative left-[500px] top-[500px]">{message}</p>
             )}
-            <form className="relative left-[100px]">
-              <div className=" text-red-500 font-[700] text-[26px]">
-                {teams.map(({ teamName, _id }) => (
-                  <label key={_id} className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      value={teamName}
-                      checked={selectedTeams.includes(teamName)}
-                      onChange={() => handleCheckboxChange(teamName)}
-                    />
-                    <span>{teamName}</span>
-                  </label>
+            {teams.length === 0 && !message && <p>Loading teams...</p>}
+            <form className="relative left-[100px] ">
+              {teams
+                .filter(({ teamName }) =>
+                  teamName.toLowerCase().includes(newTeamName.toLowerCase())
+                )
+                .map(({ teamName, _id }) => (
+                  <div className="text-red-600 font-bold text-[2rem]" key={_id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        value={teamName}
+                        checked={selectedTeams.includes(teamName)}
+                        onChange={() => handleCheckboxChange(teamName)}
+                      />
+                      {" " + teamName}
+                    </label>
+                  </div>
                 ))}
-              </div>
-
-              {message && (
-                <p className="relative top-[280px] left-[-30px]">{message}</p>
-              )}
             </form>
 
-            <div className="absolute left-[500px] top-[450px]">
+            <div className="absolute left-[500px] top-[500px]">
               <h2
                 className="text-xl font-bold mb-4"
                 style={{ marginTop: -400 }}
@@ -355,15 +364,22 @@ export default function TeamSelector() {
 
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white p-2 w-[300px] mt-4 hover:bg-blue-700 transition"
+                  disabled={isSubmitting}
+                  className={`p-2 w-[300px] mt-4 font-semibold transition ${
+                    isSubmitting
+                      ? "bg-red-300 cursor-not-allowed"
+                      : "bg-red-600 hover:bg-red-700 text-white"
+                  }`}
                 >
-                  Add Booking to Selected Teams
+                  {isSubmitting
+                    ? "Submitting..."
+                    : "Add Booking to Selected Teams"}
                 </button>
               </form>
             </div>
 
             <div
-              className="left-[80px] relative text-red-500 font-bold top-[200px]"
+              className="left-[480px] absolute text-red-500 font-bold top-[700px]"
               style={{ marginTop: 20 }}
             >
               <strong>Selected Teams:</strong>{" "}
