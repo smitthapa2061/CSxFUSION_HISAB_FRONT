@@ -200,25 +200,31 @@ export default function TeamSelector() {
             </div>
 
             <h2 className="relative left-[100px]">Select Teams</h2>
-            {message && <p className="relative left-[100px]">{message}</p>}
-            {teams.length === 0 && !message && <p>Loading teams...</p>}
+
+            {teams.length === 0 && !message && (
+              <p className="">Loading teams...</p>
+            )}
             <form className="relative left-[100px]">
-              {teams.map(({ teamName, _id }) => (
-                <div key={_id} style={{ marginBottom: 8 }}>
-                  <label>
+              <div className=" text-red-500 font-[700] text-[26px]">
+                {teams.map(({ teamName, _id }) => (
+                  <label key={_id} className="flex items-center space-x-2">
                     <input
                       type="checkbox"
                       value={teamName}
                       checked={selectedTeams.includes(teamName)}
                       onChange={() => handleCheckboxChange(teamName)}
                     />
-                    {" " + teamName}
+                    <span>{teamName}</span>
                   </label>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              {message && (
+                <p className="relative top-[280px] left-[-30px]">{message}</p>
+              )}
             </form>
 
-            <div className="relative left-[500px] top-[300px]">
+            <div className="absolute left-[500px] top-[450px]">
               <h2
                 className="text-xl font-bold mb-4"
                 style={{ marginTop: -400 }}
