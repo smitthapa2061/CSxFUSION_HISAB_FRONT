@@ -81,8 +81,7 @@ export default function DisplayBookings({
       team.bookings.forEach((b) => {
         totals.entryFee += b.entryFee || 0;
         totals.winning += b.winning || 0;
-        totals.casterCost += b.casterCost || 0;
-        totals.productionCost += b.productionCost || 0;
+      
       });
       return totals;
     },
@@ -141,10 +140,10 @@ export default function DisplayBookings({
         }}
       >
         {[
-          { name: "BISHAL", percent: 40 },
-          { name: "SMIT", percent: 40 },
-          { name: "DIWAS", percent: 10 },
-          { name: "SERVER", percent: 10 },
+          { name: "BISHAL", percent: 45 },
+          { name: "SMIT", percent: 45},
+         
+          { name: "MASTER DAI", percent: 10 },
         ].map(({ name, percent }) => {
           const shareBase =
             (grandTotals.entryFee || 0) - (grandTotals.winning || 0);
@@ -171,20 +170,11 @@ export default function DisplayBookings({
         }}
       >
         <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-          }}
+       className="ml-[20px] ]"
         >
-          <span>Total Entry Fee: Rs {Math.round(grandTotals.entryFee)}</span>
-          <span>Total Winning: Rs {Math.round(grandTotals.winning)}</span>
-          <span>
-            Total Caster Cost: Rs {Math.round(grandTotals.casterCost)}
-          </span>
-          <span>
-            Total Production Cost: Rs {Math.round(grandTotals.productionCost)}
-          </span>
+          <span >Total Entry Fee: Rs {Math.round(grandTotals.entryFee)}</span>
+          <span className="ml-[200px]">Total Winning: Rs {Math.round(grandTotals.winning)}</span>
+        
         </div>
       </div>
 
@@ -200,6 +190,7 @@ export default function DisplayBookings({
             (sum, b) => sum + (b.winning || 0),
             0
           );
+          
           const totalCasterCost = team.bookings.reduce(
             (sum, b) => sum + (b.casterCost || 0),
             0
@@ -272,18 +263,10 @@ export default function DisplayBookings({
                       <th style={{ padding: "10px", textAlign: "left" }}>
                         Description
                       </th>
-                      <th style={{ padding: "10px", textAlign: "left" }}>
-                        Caster
-                      </th>
-                      <th style={{ padding: "10px", textAlign: "right" }}>
-                        Caster Cost
-                      </th>
-                      <th style={{ padding: "10px", textAlign: "left" }}>
-                        Production
-                      </th>
-                      <th style={{ padding: "10px", textAlign: "right" }}>
-                        Production Cost
-                      </th>
+                   
+                  
+               
+                    
                       <th style={{ padding: "10px", textAlign: "center" }}>
                         Actions
                       </th>
@@ -358,44 +341,7 @@ export default function DisplayBookings({
                                 style={{ width: "100%" }}
                               />
                             </td>
-                            <td style={thTdStyleLeft}>
-                              <input
-                                type="text"
-                                name="caster"
-                                value={bookingForm.caster}
-                                onChange={handleChange}
-                                style={{ width: "100%" }}
-                              />
-                            </td>
-                            <td style={thTdStyleRight}>
-                              <input
-                                type="number"
-                                name="casterCost"
-                                value={bookingForm.casterCost}
-                                onChange={handleChange}
-                                style={{ width: "100%" }}
-                                min="0"
-                              />
-                            </td>
-                            <td style={thTdStyleLeft}>
-                              <input
-                                type="text"
-                                name="production"
-                                value={bookingForm.production}
-                                onChange={handleChange}
-                                style={{ width: "100%" }}
-                              />
-                            </td>
-                            <td style={thTdStyleRight}>
-                              <input
-                                type="number"
-                                name="productionCost"
-                                value={bookingForm.productionCost}
-                                onChange={handleChange}
-                                style={{ width: "100%" }}
-                                min="0"
-                              />
-                            </td>
+                          
                             <td style={{ textAlign: "center" }}>
                               <button
                                 style={{
@@ -449,14 +395,7 @@ export default function DisplayBookings({
                             Rs {Math.round(b.winning)}
                           </td>
                           <td style={thTdStyleLeft}>{b.discription}</td>
-                          <td style={thTdStyleLeft}>{b.caster}</td>
-                          <td style={thTdStyleRight}>
-                            Rs {Math.round(b.casterCost)}
-                          </td>
-                          <td style={thTdStyleLeft}>{b.production}</td>
-                          <td style={thTdStyleRight}>
-                            Rs {Math.round(b.productionCost)}
-                          </td>
+                         
                           <td style={{ textAlign: "center" }}>
                             <button
                               style={{
@@ -516,13 +455,7 @@ export default function DisplayBookings({
                       </td>
                       <td></td>
                       <td></td>
-                      <td style={thTdStyleRight}>
-                        Rs {Math.round(totalCasterCost)}
-                      </td>
-                      <td></td>
-                      <td style={thTdStyleRight}>
-                        Rs {Math.round(totalProductionCost)}
-                      </td>
+                     
                       <td></td>
                     </tr>
 
